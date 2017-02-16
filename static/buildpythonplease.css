@@ -6864,7 +6864,8 @@ button.close {
         color: #fff
     }
 }
-/* cyan */
+
+/* EUAN'S CODE */
 .dropbtn {
     background-color: #e95420;
     color: white;
@@ -6889,18 +6890,20 @@ button.close {
     display: block;
 }
 
-/* red */
 .dropdown-content a:hover {background-color: #555}
 
 /* Show the dropdown menu on hover */
-/* green */
 .dropdown:hover .dropdown-content {
     display: block;
     background-color: #ccc;
 }
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-/* blue */
 .dropdown:hover .dropbtn {
     background-color: #c23504;
+}
+
+.table-title {
+    color: #e95420;
+    font-weight: bold;
 }

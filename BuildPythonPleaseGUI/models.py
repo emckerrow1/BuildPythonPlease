@@ -1,3 +1,5 @@
+#python manage.py migrate --run-syncdb
+
 from django.db import models
 from django.contrib.auth.models import User, models
 
@@ -5,12 +7,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 import uuid
-def genid():
+def genid(prefix):
 
-	return "Project:"+str(uuid.uuid4())
+	return prefix+str(uuid.uuid4())
 
 class Projects(models.Model):
-	id = models.CharField(max_length=100,primary_key=True, default=genid(), editable=False)
+	id = models.CharField(max_length=100,primary_key=True, default=genid("Project:"), editable=False)
 
 	title = models.CharField(max_length=100)
 	owner = models.CharField(max_length=75)
@@ -24,9 +26,13 @@ class Filter(models.Model):
 	search = models.CharField(max_length=75)
 
 class Solution(models.Model):
+	id = models.CharField(max_length=100,primary_key=True, default=genid("Solution:"), editable=False)
+
+	project_id = models.CharField(max_length=100)
 	solution = models.TextField()
 	owner = models.CharField(max_length=75)
 	sender = models.CharField(max_length=75)
+	is_new = models.BooleanField(default=True)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

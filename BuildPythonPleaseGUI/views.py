@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from decorator import view_new_notification
 from django.contrib.auth.models import User
 from forms import UserForm, CreateProjectForm, FilterForm, SolutionForm
 from models import Projects, Solution
@@ -70,8 +71,10 @@ def home(request):
 			#"all_open_incidents":all_open_dict,
 			})
 
+@view_new_notification
 def about_us(request):
 	#print UserProxy
+	print request
 
 	return render(request, 'BuildPythonPleaseGUI/about_us.html')
 
@@ -178,8 +181,6 @@ def project(request, id):
 	if project.status == "Closed":	is_closed = True
 	else: is_closed = False
 
-	print request.GET
-
 	if request.GET.get('Close') == "Close Project":
 		if project.status == "Open" and is_owner:
 			Projects.objects.select_related().filter(id=project.id).update(status="Closed")
@@ -195,6 +196,34 @@ def project(request, id):
 												"id":id,
 												})
 
+	elif request.GET.get('accept_solution') == "Accept Solution":
+		if project.status == "Open":
+			solution_id = request.GET.get('solution_id')
+			sol = Solution.objects.filter(id=solution_id)[0]
+			#update senders balance
+			user = User.objects.get(username=sol.sender)
+			new_balance = str(int(user.userprofile.balance) + int(project.payout))
+			user.userprofile.balance = new_balance
+			user.save()
+	
+			#closed project
+			project.status = "Closed"
+			project.save()
+		return HttpResponseRedirect("/projects/")
+
+	if is_owner:
+		solutions = []
+
+		for sol in Solution.objects.filter(project_id=id):
+			solutions.append(sol)
+		
+		if len(solutions) > 0:
+			return render(request, 'BuildPythonPleaseGUI/project.html', {
+										"project":project,
+										"is_owner":is_owner,
+										"is_closed":is_closed,
+										"solutions":solutions,
+										})
 
 	if request.method == 'POST':
 
@@ -206,7 +235,8 @@ def project(request, id):
 
 			solution = sf.save(commit=False)
 			solution.owner = project.owner
-			solution.sender = user
+			solution.sender = user.username
+			solution.project_id = id
 			solution = sf.save(commit=True)
 
 			#for sol in Solution.objects.all():	print sol.solution
@@ -216,6 +246,7 @@ def project(request, id):
 												"project":project,
 												"is_owner":is_owner,
 												"is_closed":is_closed,
+												"solutions":False,
 												})
 
 
