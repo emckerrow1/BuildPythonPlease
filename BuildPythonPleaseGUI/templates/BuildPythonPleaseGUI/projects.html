@@ -1,0 +1,99 @@
+{% extends 'BuildPythonPleaseGUI/menu_base.html' %}
+
+{% block content %}
+
+<div class="container">
+	<h1>Projects</h1>
+	<form method="post" action="#">
+		{% csrf_token %}
+			<table style="border-spacing:10px;border-collapse:separate;">
+                <tr>
+                    <td align="left" style="color:#d34615;">{{ form.search.label_tag }}</td>
+                    <td align="left">{{ form.search }}
+                    &nbsp;	
+                    <input class="btn btn-primary btn-sm" type="submit" value="Search" /></td>
+                </tr>
+        	</table>
+		
+	</form>
+	{% if projects|length > 0%}
+
+	<div class="col-lg-12 col-md-12 panel panel-default">
+		<div class="panel-heading panel-heading-custom">{{ search_title }}</div>
+		    <div class="panel-body">
+		  	  
+		        <table  id="projects" class="table">
+
+				  <thead>
+				  	<tr>
+				  		<th>Projects</th>
+				 	 </tr>
+				  </thead>
+				   <tbody>
+
+				  {% for project in projects %}
+
+				  <tr  style="padding:0px;margin:0px;"> 
+				  	<td style="padding:0px;margin:0px;">
+				  	 <table class="table table-bordered"  style="margin:0px;">
+					 <tr>
+		                <td colspan="15">
+		                	<a style="font-weight:bold;" href="/project/{{ project.id }}">{{ project.title }}</a>
+		            	</td>
+		             </tr>
+		             <tr>
+		            	<td width="5%" style="text-align:right;vertical-align:middle;font-size:12px;font-weight:bold;">
+		            		Owner:
+		            	</td>			            	
+		            	<td width="10%" style="font-size:10px;vertical-align:middle;">
+		            		{{ project.owner }}
+		            	</td>
+		            	<td width="5%" style="text-align:right;vertical-align:middle;font-size:12px;font-weight:bold;">
+		            		Python Version:
+		            	</td>			            	
+		            	<td width="10%" style="font-size:10px;vertical-align:middle;">
+		            		{{ project.version }}
+		            	</td>
+		            	<td width="10%" style="text-align:right;vertical-align:middle;font-size:12px;font-weight:bold;">
+		            		Client:
+		            	</td>			            	
+		            	<td width="10%" style="font-size:10px;vertical-align:middle;">
+		            		{{ project.client|default_if_none:"None Specified"}}
+		            	</td>
+
+		            	<td width="10%" style="text-align:right;vertical-align:middle;font-size:12px;font-weight:bold;">
+		            		Description:
+		            	</td>
+		            	<td width="10%" style="font-size:10px;vertical-align:middle;">
+		            		{{ project.description }}
+		            	</td>
+
+		            	<td width="10%" style="text-align:right;vertical-align:middle;font-size:12px;font-weight:bold;">
+		            		Status:
+		            	</td>
+		            	<td width="10%" style="font-size:10px;vertical-align:middle;">
+		            		{{ project.status}}
+		            	</td>
+
+		            	<td width="10%" style="text-align:right;vertical-align:middle;font-size:12px;font-weight:bold;">
+		            		Payout:
+		            	</td>
+		            	<td width="10%" style="font-size:10px;vertical-align:middle;">
+		            		{{ project.payout }}
+		            	</td>
+
+			         </tr>
+			         </table>
+		            </td>
+		          </tr>
+				  {% endfor %}
+				   </tbody>
+				  
+				  </table>
+		</div>
+	</div>
+	{% endif %}
+
+</div>
+
+{% endblock %}

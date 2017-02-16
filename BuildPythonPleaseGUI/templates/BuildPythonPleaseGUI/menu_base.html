@@ -1,0 +1,74 @@
+{% load staticfiles %}
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="{% static 'buildpythonplease.css' %}">
+
+        <title>BuildPythonPlease</title>
+    </head>
+<body>
+
+	    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="/" class="navbar-brand">Home</a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+          <ul class="nav navbar-nav">
+          	<li class="tab"><a href="/about_us/">About Us</a></li>
+          	<li class="tab"><a href="/terms_and_conditions/">Terms & Conditions</a></li>
+		{% if user.userprofile.is_admin %}
+            <li class="tab"><a href="/all_users/">All Users</a></li>
+
+		{% endif %}
+
+		{% if user.is_authenticated %}
+            <li class="tab"><a href="/projects/">Projects</a></li>
+            <li class="tab"><a href="/create_project/">Create Project</a></li>
+        {% else %}
+        	<li class="tab"><a href="/register/">Register</a></li>	
+			<li class="tab"><a href="/login/">Login</a></li>
+		{% endif %}
+            
+          </ul>
+
+		{% if user.is_authenticated %}
+          <ul class="nav navbar-nav navbar-right">
+
+            <li class="dropdown">
+			  <button class="dropbtn">{{user.username}} <span class="caret"></span></button>
+			  <div class="dropdown-content">
+			    <a href="#">My Account</a>
+			    <a href="/logout/">Log Out</a>
+			  </div>
+			</li>
+
+            <li class="label" style="margin-top:11px; margin-left:10px; background-color:#333; color:#d34615; line-height:20px; font-size:15px;"><span class="label">Balance:</span>
+				<span class="label" style="background-color:#d34615; color:#333; ">{{ user.userprofile.balance }}</span>
+			</li>
+          </ul>
+		{% endif %}
+
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+                
+    {% block content %}
+
+    {% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends 'BuildPythonPleaseGUI/menu_base.html' %}
+
+{% block content %}
+
+<div class="container">
+	<h1>Create a Project</h1>
+	</br>
+	</br>
+	<div class="row">
+	    <div class="col-md-7 col-md-offset-3">
+	        <div class="login-panel panel panel-default">
+	            <div class="panel-heading">
+	                <h3 class="panel-title">Please Create a Project</h3>
+	            </div>
+	            <div class="panel-body" style="text-align:center">
+                                
+	                <center>
+	                <form method="post" action="/create_project/">
+	                    {% csrf_token %}
+	
+	                    <p class="bs-component">
+                            BBP, BuildPythonPlease<br>
+                            {% if form_error %}
+                                <p style="color:red">Form Incomplete.</p>
+                            {% else %}
+                                <br>
+
+                            {% endif %}
+
+                            <table style="border-spacing:10px;border-collapse:separate;">
+                                <tr>
+                                    <td align="left">{{ form.title.label_tag }}</td>
+                                    <td align="left">{{ form.title }}</td>
+                                </tr>
+                                <tr>
+                                    <td align="left">{{ form.version.label_tag}}</td>
+                                    <td align="left">{{ form.version}}</td>
+                                </tr>
+                                <tr>
+                                    <td align="left">{{ form.client.label_tag }}</td>
+                                    <td align="left">{{ form.client }}</td>
+                                </tr>
+                                <tr>
+                                    <td align="left">{{ form.description.label_tag}}</td>
+                                    <td align="left">{{ form.description}}</td>
+                                </tr>
+                                <tr>
+                                    <td align="left">{{ form.payout.label_tag}}</td>
+                                    <td align="left">{{ form.payout}}</td>
+                                </tr>
+
+                            </table>
+                        </p>
+                        <p class="bs-component">
+                            <center>
+                                    <input class="btn btn-primary btn-sm" type="submit" value="Create" />
+                            </center>
+                        </p>
+                        <input type="hidden" name="next" value="/projects/" />
+                    </form>
+	
+	                Have you read the <a href="/terms_and_conditions">Terms & Conditions</a> so you are not in breach of our argeement?
+	                </center>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</div>
+
+{% endblock %}

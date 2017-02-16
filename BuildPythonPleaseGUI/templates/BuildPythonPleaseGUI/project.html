@@ -1,0 +1,123 @@
+{% extends 'BuildPythonPleaseGUI/menu_base.html' %}
+
+{% block content %}
+
+<div class="container">
+	<h1>{{ project.title }}</h1>
+
+	<div class="col-lg-12 col-md-12 panel panel-default">
+		<div class="panel-heading panel-heading-custom">{{ project.id }}</div>
+		    <div class="panel-body">
+		  	  
+		        <table  id="projects" class="table">
+
+				  <thead>
+				  	<tr>
+
+				 	 </tr>
+				  </thead>
+				   <tbody>
+
+
+				  <tr  style="padding:0px;margin:0px;"> 
+				  	<td style="padding:0px;margin:0px;">
+				  	<table class="table table-bordered"  style="margin:0px;">
+					<tr>
+		                <td colspan="5" style="font-weight:bold;">
+		                	Title
+		            	</td>
+		                <td colspan="10">
+		                	{{ project.title }}
+		            	</td>
+		            </tr>
+		            <tr>
+					<tr>
+		                <td colspan="5" style="font-weight:bold;">
+		                	Owner
+		            	</td>
+		            	</td>
+		                <td colspan="10">
+		                	{{ project.owner }}
+		            	</td>
+		            </tr>
+					<tr>
+		                <td colspan="5" style="font-weight:bold;">
+		                	Version
+		            	</td>
+		            	</td>
+		                <td colspan="10">
+		                	{{ project.version }}
+		            	</td>
+		            </tr>
+					<tr>
+		                <td colspan="5" style="font-weight:bold;">
+		                	Client
+		            	</td>
+		            	</td>
+		                <td colspan="10">
+		                	{{ project.client }}
+		            	</td>
+		            </tr>
+					<tr>
+		                <td colspan="5" style="font-weight:bold;">
+		                	Description
+		            	</td>
+		            	</td>
+		                <td colspan="10">
+		                	{{ project.description }}
+		            	</td>
+		            </tr>
+					<tr>
+		                <td colspan="5" style="font-weight:bold;">
+		                	Status
+		            	</td>
+		            	</td>
+		                <td colspan="10">
+		                	{{ project.status }}
+		            	</td>
+		            </tr>
+					<tr>
+		                <td colspan="5" style="font-weight:bold;">
+		                	Payout
+		            	</td>
+		            	</td>
+		                <td colspan="10">
+		                	{{ project.payout }}
+		            	</td>
+		            </tr>
+
+
+			            </table>
+		            </td>
+		            </tr>
+				   </tbody>
+				  
+				  </table>
+		</div>
+		{% if is_owner %}
+			{% if is_closed %}
+			<br>
+			{% else %}
+			<div>
+				<form method='get' action='#'>
+    				<input class="btn btn-primary btn-sm" type="submit" value="Close Project" name="Close"/>
+				</form>
+			</div>
+			{% endif %}
+
+		{% else %}
+			{% if is_closed %}
+			<br>
+			{% else %}
+			<div>
+				<form method='get' action='#'>
+    				<input class="btn btn-primary btn-sm" type="submit" value="Submit Solution" name="submit_solution"/>
+				</form>
+			</div>
+			{% endif %}
+		{% endif %}
+	</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'BuildPythonPleaseGUI/menu_base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5 col-md-offset-3">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Register</h3>
+                </div>
+
+                <div class="panel-body">
+                    <center>
+                    {% if userform.errors %}
+
+                    <p style="color:red;">Error in register form. Please try again.</p>
+                    {% endif %}
+                    <b>Welcome to BuildPythonPlease</b><br><br> Please fill out your details to get started:
+
+                    <form method="post" action="" autocomplete="off">
+                        {% csrf_token %}
+					
+                        <p class="bs-component">
+                        	
+                            <table style="border-spacing:2px;border-collapse:separate;">
+                                <tr>
+                                    <td align="right">{{ userform.username.label_tag }}</td>
+                                    <td align="right">{{ userform.username }}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">{{ userform.email.label_tag}}</td>
+                                    <td align="right">{{ userform.email}}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">{{ userform.first_name.label_tag}}</td>
+                                    <td align="right">{{ userform.first_name}}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">{{ userform.last_name.label_tag}}</td>
+                                    <td align="right">{{ userform.last_name}}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">{{ userform.password1.label_tag}}</td>
+                                    <td align="right">{{ userform.password1}}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">{{ userform.password2.label_tag}}</td>
+                                    <td align="right">{{ userform.password2}}</td>
+                                </tr>
+
+                            </table>
+                        </p>
+						{% if error_msg %}
+							<p class="bs-component" style="color:red;text-align:center">Please fix the following: </p>
+                            <ul style="color:red;float:center">
+                                {% for error in error_msg %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+						{% endif %}
+                        <p class="bs-component">
+                            <center>
+                                <input class="btn btn-primary btn-sm" type="submit" value="Register" />
+                            </center>
+                        </p>
+                        <input type="hidden" name="next" value="{{ next }}" />
+                    </form>
+                    Or did you want to <a href="/login">Log In</a>?<br><br>
+                    Registration constitutes agreement to our <a href="/terms_and_conditions/">Terms Of Service</a>
+                    </center>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+<script>
+{% if not user.is_authenticated %}
+$("ul.nav.navbar-nav.navbar-right").css("display","none");
+{% endif %}
+</script>
+
+{% endblock %}

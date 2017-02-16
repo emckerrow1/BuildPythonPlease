@@ -1,0 +1,56 @@
+{% extends 'BuildPythonPleaseGUI/menu_base.html' %}
+
+{% block content %}
+
+<div class="container">
+	<h1>{{ project.title }}</h1>
+
+	<form method="post" action="/project/{{id}}/">
+	{% csrf_token %}
+	<div class="col-lg-12 col-md-12 panel panel-default">
+		<div class="panel-heading panel-heading-custom"><div>{{ project.id }}</div>
+			<div>{{ project.description }}</div></div>
+		    <div class="panel-body">
+		  	  
+		        <table  id="projects" class="table">
+
+				  <thead>
+				  	<tr>
+
+				 	 </tr>
+				  </thead>
+				   <tbody>
+
+
+				  <tr  style="padding:0px;margin:0px;"> 
+				  	<td style="padding:0px;margin:0px;">
+				  	<table class="table table-bordered"  style="margin:0px;">
+					<tr>
+		                <td colspan="5" style="font-weight:bold;">
+		                	Title
+		            	</td>
+		            </tr>
+		            <tr>
+		                <td style="width=100px;">
+		                	{{ form.solution }}
+		            	</td>
+		            </tr>
+
+
+			            </table>
+		            </td>
+		            </tr>
+				   </tbody>
+				  
+				  </table>
+		</div>
+			<div>
+    				<input class="btn btn-primary btn-sm" type="submit" value="Submit Solution" name="submit_solution"/>
+			</div>
+			<br>
+		</form>
+	</div>
+
+</div>
+
+{% endblock %}
