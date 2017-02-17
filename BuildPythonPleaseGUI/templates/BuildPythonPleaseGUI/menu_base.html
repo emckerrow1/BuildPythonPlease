@@ -6,6 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" >
         <link rel="stylesheet" href="{% static 'buildpythonplease.css' %}">
 
         <title>BuildPythonPlease</title>
@@ -45,12 +46,25 @@
           <ul class="nav navbar-nav navbar-right">
 
             <li class="dropdown">
-			  <button class="dropbtn">{{user.username}} <span class="caret"></span></button>
-			  <div class="dropdown-content">
-			    <a href="#">My Account</a>
-			    <a href="/logout/">Log Out</a>
-			  </div>
-			</li>
+              <a href="/messages/" style="padding:0px;"><button class="dropbtn glyphicon-envelope" style="padding:16px 50px;">{% if notifications.is_new %}  {{notifications.number}}{% else %}  0{% endif %}</button></a>
+              <div class="dropdown-content">
+                {% if notifications.is_new %}
+                {% for id in notifications.ids%}
+                <a href="/project/{{id.proj}}" style="width:360px;">{{id.sol}}</a>
+                {% endfor %}
+                {% else %}
+                <a href="#">No new notifications</a>
+                {% endif %}
+              </div>
+            </li>
+
+            <li class="dropdown">
+			        <button class="dropbtn">{{user.username}} <span class="caret"></span></button>
+			        <div class="dropdown-content">
+			          <a href="#">My Account</a>
+			          <a href="/logout/">Log Out</a>
+			        </div>
+			      </li>
 
             <li class="label" style="margin-top:11px; margin-left:10px; background-color:#333; color:#d34615; line-height:20px; font-size:15px;"><span class="label">Balance:</span>
 				<span class="label" style="background-color:#d34615; color:#333; ">{{ user.userprofile.balance }}</span>
