@@ -21,6 +21,69 @@ html {
 body {
     margin: 0
 }
+
+/* EUAN'S CODE */
+
+.droplink {
+    color:#e45726;
+    background-color: #ccc;
+    margin-bottom: 0;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+ }
+
+.dropbtn {
+    background-color: #e95420;
+    color: white;
+    padding: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color:#e45726;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #555}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+    background-color: #ccc;
+}
+
+
+.droplink:hover {
+    background-color: #555;
+}
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #c23504;
+}
+
+.table-title {
+    color: #e95420;
+    font-weight: bold;
+}
+
 article,
 aside,
 details,
@@ -6863,47 +6926,4 @@ button.close {
     .navbar .dropdown-menu a {
         color: #fff
     }
-}
-
-/* EUAN'S CODE */
-.dropbtn {
-    background-color: #e95420;
-    color: white;
-    padding: 16px;
-    border: none;
-    cursor: pointer;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: #c23504;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {background-color: #555}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-    background-color: #ccc;
-}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {
-    background-color: #c23504;
-}
-
-.table-title {
-    color: #e95420;
-    font-weight: bold;
 }

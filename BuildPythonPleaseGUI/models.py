@@ -32,7 +32,6 @@ class Solution(models.Model):
 	solution = models.TextField()
 	owner = models.CharField(max_length=75)
 	sender = models.CharField(max_length=75)
-	is_new = models.BooleanField(default=True)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -47,3 +46,9 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
+
+class Notifications(models.Model):
+	username = models.CharField(max_length=75)
+	link = models.CharField(max_length=75)
+	title = models.CharField(max_length=75)
+	is_new = models.BooleanField(default=True)

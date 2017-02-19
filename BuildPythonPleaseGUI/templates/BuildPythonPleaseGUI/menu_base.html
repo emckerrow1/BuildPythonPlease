@@ -49,8 +49,10 @@
               <a href="/messages/" style="padding:0px;"><button class="dropbtn glyphicon-envelope" style="padding:16px 50px;">{% if notifications.is_new %}  {{notifications.number}}{% else %}  0{% endif %}</button></a>
               <div class="dropdown-content">
                 {% if notifications.is_new %}
-                {% for id in notifications.ids%}
-                <a href="/project/{{id.proj}}" style="width:360px;">{{id.sol}}</a>
+                {% for not in notifications.nots%}
+              <form method='get' action='{{not.link}}' style="height:25px;">
+                  <input class="droplink" type="submit" value="{{not.title}}" name="remove_notification"/>
+              </form>
                 {% endfor %}
                 {% else %}
                 <a href="#">No new notifications</a>

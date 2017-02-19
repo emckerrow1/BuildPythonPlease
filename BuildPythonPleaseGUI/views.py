@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 #from decorator import view_new_notification
 from django.contrib.auth.models import User
 from forms import UserForm, CreateProjectForm, FilterForm, SolutionForm
-from models import Projects, Solution
+from models import Projects, Solution, Notifications
 
 ### CUSTOM FUNCTIONS
 import uuid
@@ -18,18 +18,27 @@ def is_a_num(s):
 	except ValueError:
 		return False
 
+def create_notification(username, link, title):
+	Notifications.objects.create(username=username, link=link, title=title)
+
+def remove_notification(remove_notification_title):
+	noti =Notifications.objects.get(title=remove_notification_title)
+	noti.is_new = False
+	noti.save()
+
 def notifications(request):
 	user = request.user.username
 	notifications = {}
-	notifications["ids"] = []
-	for sol in Solution.objects.filter(owner=user):
-		if sol.is_new:
-			notifications["ids"].append({"proj":sol.project_id,"sol":sol.id})
-	if notifications["ids"] != []:
+	notifications["nots"] = []
+	for noti in Notifications.objects.filter(username=user):
+		if noti.is_new:
+			notifications["nots"].append({"link":noti.link,"title":noti.title})
+	
+	if notifications["nots"] != []:
 		notifications["is_new"] = True
 	else:
 		notifications["is_new"] = False
-	notifications["number"] = str(len(notifications["ids"]))
+	notifications["number"] = str(len(notifications["nots"]))
 	return notifications
 
 
@@ -97,6 +106,7 @@ def home(request):
 def about_us(request):
 	#print UserProxy
 	#print request
+	#create_notification(request.user.username, "/", "Visited About Us page")
 	return render(request, 'BuildPythonPleaseGUI/about_us.html', {'notifications':notifications(request)})
 	#return render(request, 'BuildPythonPleaseGUI/about_us.html')
 
@@ -199,6 +209,10 @@ def project(request, id):
 	project = Projects.objects.get(id=id)
 	user = User.objects.get(username=request.user.username)
 
+	remove_notification_title = request.GET.get("remove_notification")
+	if remove_notification_title != None:
+		remove_notification(remove_notification_title)
+
 	if project.owner == request.user.username:	is_owner = True
 	else:	is_owner = False
 
@@ -218,6 +232,7 @@ def project(request, id):
 												"project":project,
 												"form":form,
 												"id":id,
+												'notifications':notifications(request),
 												})
 
 	elif request.GET.get('accept_solution') == "Accept Solution":
@@ -234,13 +249,20 @@ def project(request, id):
 			project.status = "Closed"
 			project.save()
 
+			create_notification(sol.sender, "/project/"+id+"/", "Solution accepted for "+project.id+" with "+sol.id+" - "+project.payout+" added to balance")
+			
 			for sol_in_proj in Solution.objects.filter(project_id=sol.project_id):
 				sol_in_proj.delete()
+				create_notification(sol_in_proj.sender, "/project/"+id+"/", sol.id+" declined for "+project.id)
 			return HttpResponseRedirect("/projects/")
 
 	elif request.GET.get('decline') == "Decline":
 		solution_id = request.GET.get('solution_id')
-		Solution.objects.get(id=solution_id).delete()
+		sol =Solution.objects.get(id=solution_id)
+
+		create_notification(sol.sender, "/project/"+id+"/", sol.id+" declined for "+project.id)
+		sol.delete()
+		
 		return HttpResponseRedirect("/project/"+id+"/")
 
 	if is_owner:
@@ -273,6 +295,7 @@ def project(request, id):
 			solution.project_id = id
 			solution = sf.save(commit=True)
 
+			create_notification(project.owner, "/project/"+id+"/#"+solution.id, "New Solution - "+solution.id)
 			#for sol in Solution.objects.all():	print sol.solution
 
 
@@ -281,6 +304,7 @@ def project(request, id):
 												"is_owner":is_owner,
 												"is_closed":is_closed,
 												"solutions":False,
+												'notifications':notifications(request),
 												})
 
 
@@ -288,7 +312,7 @@ def project(request, id):
 def all_users(request):
 	#warning can change request.user
 	#look how to use session id
-	#same issue in projects, create_project and project, notifications
+	#same issue in messages, projects, create_project and project, notifications
 	user = User.objects.get(username=request.user.username)
 	#print user
 	#is_admin = user.userprofile.is_admin
@@ -303,4 +327,25 @@ def all_users(request):
 													"every_user":every_user,
 													'notifications':notifications(request),
 													})
-	return render(request, "BuildPythonPleaseGUI/all_users.html")
+	return render(request, "BuildPythonPleaseGUI/all_users.html", { 
+													'notifications':notifications(request),
+													})
+
+def messages(request):
+	user = User.objects.get(username=request.user.username)
+	
+	user_notifications = Notifications.objects.filter(username=user)
+	if request.GET.get("notification_id") != None and request.GET.get("delete")=="Delete":
+		notification = Notifications.objects.get(id=request.GET.get("notification_id"))
+		if notification.username == user.username:
+			notification.delete()
+			print notification
+
+	elif request.GET.get("delete_all")=="Delete All":
+		user_notifications.delete()
+		
+	user_notifications.update(is_new=False)
+	return render(request, "BuildPythonPleaseGUI/messages.html", { 
+													'notifications':notifications(request),
+													'user_notifications':user_notifications,
+													})

@@ -36,6 +36,7 @@ urlpatterns = [
 
     #authentication required
     url(r'^projects/', BPP_views.projects),
+    url(r'^messages/', BPP_views.messages),
     url(r'^project/(?P<id>.*)/$', BPP_views.project),
     url(r'^create_project/', BPP_views.create_project),
 

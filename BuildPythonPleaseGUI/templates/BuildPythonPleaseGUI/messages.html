@@ -1,0 +1,66 @@
+{% extends 'BuildPythonPleaseGUI/menu_base.html' %}
+
+{% block content %}
+<div class="container" >
+	<h1>Messages</h1>
+	<p>
+		All your messages are below.
+	</p>
+
+			<div class="panel-heading panel-heading-custom">Inbox</div>
+		    <div class="panel-body">
+		  	  
+		        <table  id="projects" class="table">
+
+				  <thead>
+				  	<tr>
+
+				 	</tr>
+				  </thead>
+				   <tbody>
+
+
+				  <tr  style="padding:0px;margin:0px;"> 
+				  	<td style="padding:0px;margin:0px;">
+
+				  		<table class="table table-bordered"  style="margin:0px;">
+						  
+						  <tr>
+		            		<td colspan="5" style="font-size:14px; font-weight:bold;color:#555">
+		               			ID
+		            		</td>
+		               		<td colspan="10" style="font-size:14px; font-weight:bold;color:#555">
+		               			Title
+		            		</td>
+						   	  <td colspan="10">
+		            		   <form method='get' action='#'>
+    							<input style="float:right;margin-left:5px;" class="btn btn-primary btn-sm" type="submit" value="Delete All" name="delete_all"/>
+							   </form>
+						     </td>
+		            	  </tr>
+		            	  {% for user_notification in user_notifications %}
+		            	  <tr>
+		            		<td colspan="5" style="font-size:12.5px;">
+		               			{{ user_notification.id }}
+		            		</td>
+		               		<td colspan="10" style="font-size:12.5px;">
+		               			<a href="{{user_notification.link}}">{{ user_notification.title }}</a>
+		            		</td>
+						   	  <td colspan="10">
+		            		   <form method='get' action='#'>
+		            		   	<input style="display:none" type="text" value="{{ user_notification.id }}" name="notification_id"/>
+    							<input style="float:right;margin-left:5px;" class="btn btn-primary btn-sm" type="submit" value="Delete" name="delete"/>
+							   </form>
+						     </td>
+						     {% endfor %}
+		            	  </tr>
+		            	</table>
+		            </td>
+		            </tr>
+				   </tbody>
+				  
+				  </table>
+			</div>
+</div>
+
+{% endblock %}
