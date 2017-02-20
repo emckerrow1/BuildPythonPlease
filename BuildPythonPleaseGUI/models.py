@@ -22,8 +22,8 @@ class Projects(models.Model):
 	status = models.CharField(max_length=15)
 	payout = models.CharField(max_length=15)
 
-class Filter(models.Model):
-	search = models.CharField(max_length=75)
+#class Filter(models.Model):
+#	search = models.CharField(max_length=75)
 
 class Solution(models.Model):
 	id = models.CharField(max_length=100,primary_key=True, default=genid("Solution:"), editable=False)

@@ -2,7 +2,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
 from django import forms
 from django.contrib.auth.models import User
-from models import Projects, Filter, Solution
+from models import Projects, Solution#, Filter
 
 class LoginForm(AuthenticationForm):
 	username = forms.CharField(label="Username", max_length=30, 
@@ -56,7 +56,7 @@ class CreateProjectForm(forms.ModelForm):
 		model = Projects
 		fields = ('title','version','client','description','payout',)
 
-class FilterForm(forms.ModelForm):
+class FilterForm(forms.Form):
 
 	search = forms.ChoiceField(choices=[
 								("Open Projects", "Open Projects"),
@@ -65,9 +65,9 @@ class FilterForm(forms.ModelForm):
 								("All Projects", "All Projects"),
 						])
 
-	class Meta:
-		model = Filter
-		fields = ('search',)
+	#class Meta:
+	#	model = Filter
+	#	fields = ('search',)
 
 class SolutionForm(forms.ModelForm):
 

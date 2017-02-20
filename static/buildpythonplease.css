@@ -3638,7 +3638,8 @@ input[type="button"].btn-block {
     display: none
 }
 .collapse.in {
-    display: block
+    display: block;
+    width:100%;
 }
 tr.collapse.in {
     display: table-row

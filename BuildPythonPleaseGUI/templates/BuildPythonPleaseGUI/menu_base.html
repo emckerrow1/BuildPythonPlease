@@ -17,13 +17,46 @@
       <div class="container">
         <div class="navbar-header">
           <a href="/" class="navbar-brand">Home</a>
+          {% if user.is_authenticated %}
+          <ul style="margin:0px;float:left;">
+
+
+            <li class="label" style="margin-top:11px; margin-left:10px; background-color:#333; color:#d34615; line-height:20px; font-size:15px;"><span class="label">Balance:</span>
+             <span class="label" style="background-color:#d34615; color:#333; ">{{ user.userprofile.balance }}</span>
+           </li>
+           
+            <li class="dropdown">
+              <a href="/messages/" style="padding:0px;"><button class="dropbtn glyphicon-envelope" style="padding:16px 50px;">{% if notifications.is_new %}  {{notifications.number}}{% else %}  0{% endif %}</button></a>
+              <div class="dropdown-content">
+                {% if notifications.is_new %}
+                {% for not in notifications.nots%}
+              <form method='get' action='{{not.link}}' style="height:25px;">
+                  <input class="droplink" type="submit" value="{{not.title}}" name="remove_notification"/>
+              </form>
+                {% endfor %}
+                {% else %}
+                <a href="#">No new notifications</a>
+                {% endif %}
+              </div>
+            </li>
+
+            <li class="dropdown">
+              <button class="dropbtn">{{user.username}} <span class="caret"></span></button>
+              <div class="dropdown-content">
+                <a href="#">My Account</a>
+                <a href="/logout/">Log Out</a>
+              </div>
+            </li>
+
+          </ul>
+    {% endif %}
           <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
         </div>
-        <div class="navbar-collapse collapse" id="navbar-main">
+        <div class="navbar-collapse collapse" id="navbar-main" style="float:right;">
           <ul class="nav navbar-nav">
           	<li class="tab"><a href="/about_us/">About Us</a></li>
           	<li class="tab"><a href="/terms_and_conditions/">Terms & Conditions</a></li>
@@ -42,37 +75,7 @@
             
           </ul>
 
-		{% if user.is_authenticated %}
-          <ul class="nav navbar-nav navbar-right">
-
-            <li class="dropdown">
-              <a href="/messages/" style="padding:0px;"><button class="dropbtn glyphicon-envelope" style="padding:16px 50px;">{% if notifications.is_new %}  {{notifications.number}}{% else %}  0{% endif %}</button></a>
-              <div class="dropdown-content">
-                {% if notifications.is_new %}
-                {% for not in notifications.nots%}
-              <form method='get' action='{{not.link}}' style="height:25px;">
-                  <input class="droplink" type="submit" value="{{not.title}}" name="remove_notification"/>
-              </form>
-                {% endfor %}
-                {% else %}
-                <a href="#">No new notifications</a>
-                {% endif %}
-              </div>
-            </li>
-
-            <li class="dropdown">
-			        <button class="dropbtn">{{user.username}} <span class="caret"></span></button>
-			        <div class="dropdown-content">
-			          <a href="#">My Account</a>
-			          <a href="/logout/">Log Out</a>
-			        </div>
-			      </li>
-
-            <li class="label" style="margin-top:11px; margin-left:10px; background-color:#333; color:#d34615; line-height:20px; font-size:15px;"><span class="label">Balance:</span>
-				<span class="label" style="background-color:#d34615; color:#333; ">{{ user.userprofile.balance }}</span>
-			</li>
-          </ul>
-		{% endif %}
+		
 
         </div>
       </div>
@@ -85,6 +88,8 @@
     {% block content %}
 
     {% endblock %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </body>
 </html>

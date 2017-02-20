@@ -115,7 +115,10 @@ def projects(request):
 
 	form = FilterForm()
 	if request.method == 'POST':
-		search = request.POST.get("search")
+		form = FilterForm(request.POST)
+		# DOESNT WORK without print statement?????
+		print form
+		search = form.clean().get("search")
 
 		if search == 'Open Projects':
 			projects = Projects.objects.filter(status="Open")
@@ -339,7 +342,6 @@ def messages(request):
 		notification = Notifications.objects.get(id=request.GET.get("notification_id"))
 		if notification.username == user.username:
 			notification.delete()
-			print notification
 
 	elif request.GET.get("delete_all")=="Delete All":
 		user_notifications.delete()
