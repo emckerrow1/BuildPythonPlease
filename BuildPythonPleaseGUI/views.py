@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 #from decorator import view_new_notification
 from django.contrib.auth.models import User
-from forms import UserForm, CreateProjectForm, FilterForm, SolutionForm
+from forms import UserForm, CreateProjectForm, FilterForm, SolutionForm, PagesForm
 from models import Projects, Solution, Notifications
 
 ### CUSTOM FUNCTIONS
@@ -140,11 +140,24 @@ def projects(request):
 		search_title = "Available Projects"
 
 
+	pages={}
+	pages["page_limit"] = 5
+	pages["page_links"] = []
+	if request.method == 'POST':
+		pages["form"] = PagesForm(request.POST)
+		pages["page_limit"] = int(request.POST.get("page"))
+		for x in range(len(projects)/pages["page_limit"]):	pages["page_links"].append(str(x))
+		pages["page_links"] = "".join(pages["page_links"])
+		if len(projects)%pages["page_limit"] != 0:
+			pages["page_links"] = pages["page_links"]+str(int(pages["page_links"][-1])+1)
+	else:
+		pages["form"] = PagesForm()
 	return render(request, 'BuildPythonPleaseGUI/projects.html', {
 			"search_title":search_title,
 			"projects":projects,
 			"form":form, 
-			'notifications':notifications(request)
+			'notifications':notifications(request),
+			"pages":pages
 		})
 
 @login_required(login_url="login")
@@ -347,7 +360,21 @@ def messages(request):
 		user_notifications.delete()
 		
 	user_notifications.update(is_new=False)
+
+	pages={}
+	pages["page_limit"] = 5
+	pages["page_links"] = []
+	if request.method == 'POST':
+		pages["form"] = PagesForm(request.POST)
+		pages["page_limit"] = int(request.POST.get("page"))
+	else:
+		pages["form"] = PagesForm()
+	for x in range(len(user_notifications)/pages["page_limit"]):	pages["page_links"].append(str(x))
+	pages["page_links"] = "".join(pages["page_links"])
+	if len(user_notifications)%pages["page_limit"] != 0:
+		pages["page_links"] = pages["page_links"]+str(int(pages["page_links"][-1])+1)
 	return render(request, "BuildPythonPleaseGUI/messages.html", { 
 													'notifications':notifications(request),
 													'user_notifications':user_notifications,
+													'pages':pages,
 													})

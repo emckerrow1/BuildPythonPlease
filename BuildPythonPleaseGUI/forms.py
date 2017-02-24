@@ -2,7 +2,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
 from django import forms
 from django.contrib.auth.models import User
-from models import Projects, Solution#, Filter
+from models import Projects, Solution, Notifications
 
 class LoginForm(AuthenticationForm):
 	username = forms.CharField(label="Username", max_length=30, 
@@ -77,3 +77,11 @@ class SolutionForm(forms.ModelForm):
 		model = Solution
 		fields = ('solution',)
 
+
+class PagesForm(forms.Form):
+
+	page = forms.ChoiceField(
+                choices=[("5", "5"), ("10", "10")], 
+                widget=forms.Select(attrs={ 
+                                   "onChange":'pagesform.submit()'})
+                )

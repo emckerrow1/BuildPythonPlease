@@ -88,6 +88,24 @@
     {% block content %}
 
     {% endblock %}
+<script type="text/javascript">
+
+  var links_classname = document.getElementsByClassName("showContent");
+  var show_classname = document.getElementsByClassName("Show");
+
+  var myFunction = function() {
+    for (var i = 0; i < links_classname.length; i++) {
+      links_classname[i].style.color = "#e95420";}
+    for (var i = 0; i < show_classname.length; i++) {
+      show_classname[i].classList.remove('Show')}
+      var attribute = this.getAttribute("data-link");
+      document.getElementById(attribute).className += " Show";
+      this.style.color = "#a01302";
+  };
+
+  for (var i = 0; i < links_classname.length; i++) {
+      links_classname[i].addEventListener('click', myFunction, false);
+  }</script>​
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 

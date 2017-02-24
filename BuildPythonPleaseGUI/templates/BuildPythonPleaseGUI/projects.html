@@ -4,7 +4,7 @@
 
 <div class="container">
 	<h1>Projects</h1>
-	<form method="post" action="#">
+	<form id="pagesform" method="post" action="#">
 		{% csrf_token %}
 			<table style="border-spacing:10px;border-collapse:separate;">
                 <tr>
@@ -14,6 +14,9 @@
                     <input class="btn btn-primary btn-sm" type="submit" value="Search" /></td>
                 </tr>
         	</table>
+		<div class="field_wrapper" style="margin-left:15px;margin-top:10px;">
+   		     {{ pages.form.page }}
+   		 </div>
 		
 	</form>
 	{% if projects|length > 0%}
@@ -22,7 +25,7 @@
 		<div class="panel-heading panel-heading-custom">{{ search_title }}</div>
 		    <div class="panel-body">
 		  	  
-		        <table  id="projects" class="table">
+		        <table id="page0" class="table Show" style="margin:0px;display:none;">
 
 				  <thead>
 				  	<tr>
@@ -86,10 +89,28 @@
 			         </table>
 		            </td>
 		          </tr>
+		          {% if forloop.counter|divisibleby:pages.page_limit %}
+				   </tbody>
+				  
+				  </table>
+				  <table  id="page{% widthratio forloop.counter pages.page_limit 1 %}" class="table" style="margin:0px;display:none;">
+
+				  <thead>
+				  	<tr>
+				  		<th>Projects</th>
+				 	 </tr>
+				  </thead>
+				   <tbody>
+					{% endif %}
 				  {% endfor %}
 				   </tbody>
 				  
 				  </table>
+		           <div style="background-color:#ccc;padding-left:20px;">
+				     {% for x in pages.page_links %}
+				     <a class="showContent" href="#" data-link="page{{x}}">{{ x }}</a>
+				     {% endfor %}
+				</div>
 		</div>
 	</div>
 	{% endif %}

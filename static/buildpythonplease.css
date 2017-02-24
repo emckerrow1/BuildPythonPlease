@@ -24,6 +24,7 @@ body {
 
 /* EUAN'S CODE */
 
+
 .droplink {
     color:#e45726;
     background-color: #ccc;
@@ -83,6 +84,12 @@ body {
     color: #e95420;
     font-weight: bold;
 }
+
+.Show {
+    display:inline;
+}
+
+/* END OF EUAN'S CODE */
 
 article,
 aside,

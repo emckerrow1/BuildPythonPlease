@@ -6,8 +6,16 @@
 	<p>
 		All your messages are below.
 	</p>
-
+</br>
+</br>
+		<div class="col-lg-12 col-md-12 panel panel-default">
 			<div class="panel-heading panel-heading-custom">Inbox</div>
+			<form id="pagesform" action="" method="post">
+				{% csrf_token %}
+				<div class="field_wrapper" style="margin-left:15px;margin-top:10px;">
+   				     {{ pages.form.page }}
+   				 </div>
+   			</form>
 		    <div class="panel-body">
 		  	  
 		        <table  id="projects" class="table">
@@ -23,44 +31,67 @@
 				  <tr  style="padding:0px;margin:0px;"> 
 				  	<td style="padding:0px;margin:0px;">
 
-				  		<table class="table table-bordered"  style="margin:0px;">
+				  		<table id="page0" class="table table-bordered Show"  style="margin:0px;display:none;">
 						  
 						  <tr>
-		            		<td colspan="5" style="font-size:14px; font-weight:bold;color:#555">
+		            		<td style="font-size:14px; font-weight:bold;color:#555; width:6%;">
 		               			ID
 		            		</td>
-		               		<td colspan="10" style="font-size:14px; font-weight:bold;color:#555">
+		               		<td style="font-size:14px; font-weight:bold;color:#555; width:70%;">
 		               			Title
 		            		</td>
-						   	  <td colspan="10">
+						   	  <td style="width:5%;">
 		            		   <form method='get' action='#'>
-    							<input style="float:right;margin-left:5px;" class="btn btn-primary btn-sm" type="submit" value="Delete All" name="delete_all"/>
+    							<input class="btn btn-primary btn-sm tablebtns" type="submit" value="Delete All" name="delete_all"/>
 							   </form>
 						     </td>
 		            	  </tr>
 		            	  {% for user_notification in user_notifications %}
 		            	  <tr>
-		            		<td colspan="5" style="font-size:12.5px;">
+		            		<td style="font-size:12.5px;">
 		               			{{ user_notification.id }}
 		            		</td>
-		               		<td colspan="10" style="font-size:12.5px;">
+		               		<td style="font-size:12.5px; width:70%;">
 		               			<a href="{{user_notification.link}}">{{ user_notification.title }}</a>
 		            		</td>
-						   	  <td colspan="10">
+						   	<td style="width:5%;">
 		            		   <form method='get' action='#'>
 		            		   	<input style="display:none" type="text" value="{{ user_notification.id }}" name="notification_id"/>
-    							<input style="float:right;margin-left:5px;" class="btn btn-primary btn-sm" type="submit" value="Delete" name="delete"/>
+    							<input class="btn btn-primary btn-sm tablebtns" type="submit" value="Delete" name="delete"/>
 							   </form>
 						     </td>
-						     {% endfor %}
 		            	  </tr>
+						     {% if forloop.counter|divisibleby:pages.page_limit %}
+						     	</table>
+						     	<table id="page{% widthratio forloop.counter pages.page_limit 1 %}" class="table table-bordered"  style="margin:0px;display:none;">
+						  
+								  <tr>
+				            		<td style="font-size:14px; font-weight:bold;color:#555;width:6%;">
+				               			ID
+				            		</td>
+				               		<td style="font-size:14px; font-weight:bold;color:#555; width:70%;">
+				               			Title
+				            		</td>
+								   	  <td style="width:5%;">
+				            		   <form method='get' action='#'>
+		    							<input class="btn btn-primary btn-sm tablebtns" type="submit" value="Delete All" name="delete_all"/>
+									   </form>
+								     </td>
+				            	  </tr>
+						     {% endif %}
+						     {% endfor %}
 		            	</table>
+		            	<div style="background-color:#ccc;padding-left:20px;">
+						     {% for x in pages.page_links %}
+						     <a class="showContent" href="#" data-link="page{{x}}">{{ x }}</a>
+						     {% endfor %}
+						</div>
 		            </td>
 		            </tr>
 				   </tbody>
 				  
 				  </table>
 			</div>
+		</div>
 </div>
-
 {% endblock %}
