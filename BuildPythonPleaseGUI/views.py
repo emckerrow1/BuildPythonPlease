@@ -22,9 +22,10 @@ def create_notification(username, link, title):
 	Notifications.objects.create(username=username, link=link, title=title)
 
 def remove_notification(remove_notification_title):
-	noti =Notifications.objects.get(title=remove_notification_title)
-	noti.is_new = False
-	noti.save()
+	if remove_notification_title != None:
+		noti =Notifications.objects.get(title=remove_notification_title)
+		noti.is_new = False
+		noti.save()
 
 def notifications(request):
 	user = request.user.username
@@ -41,7 +42,28 @@ def notifications(request):
 	notifications["number"] = str(len(notifications["nots"]))
 	return notifications
 
+def get_pages(request, items_length):
+	pages={}
+	pages["page_limit"] = 5
+	pages["page_links"] = []
+	if request.method == 'POST':
+		pages["form"] = PagesForm(request.POST)
+		pages["page_limit"] = int(request.POST.get("page"))
+	else:
+		pages["form"] = PagesForm()
+	for x in range(items_length/pages["page_limit"]):	pages["page_links"].append(str(x))
+	pages["page_links"] = "".join(pages["page_links"])
+	if items_length%pages["page_limit"] != 0 and pages["page_links"] != "":
+		pages["page_links"] = pages["page_links"]+str(int(pages["page_links"][-1])+1)
+	return pages
 
+def malicious_activity(request, user, description):
+	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+	if x_forwarded_for:
+		ip = x_forwarded_for.split(',')[0]
+	else:
+		ip = request.META.get('REMOTE_ADDR')
+	create_notification("emckerrow1", "/all_users/", user+" ("+ip+")"+" - "+description)
 
 ### MAPPED FUNCTIONS
 def register(request):
@@ -148,10 +170,11 @@ def projects(request):
 		pages["page_limit"] = int(request.POST.get("page"))
 		for x in range(len(projects)/pages["page_limit"]):	pages["page_links"].append(str(x))
 		pages["page_links"] = "".join(pages["page_links"])
-		if len(projects)%pages["page_limit"] != 0:
+		if len(projects)%pages["page_limit"] != 0 and pages["page_links"] != "":
 			pages["page_links"] = pages["page_links"]+str(int(pages["page_links"][-1])+1)
 	else:
 		pages["form"] = PagesForm()
+
 	return render(request, 'BuildPythonPleaseGUI/projects.html', {
 			"search_title":search_title,
 			"projects":projects,
@@ -225,9 +248,7 @@ def project(request, id):
 	project = Projects.objects.get(id=id)
 	user = User.objects.get(username=request.user.username)
 
-	remove_notification_title = request.GET.get("remove_notification")
-	if remove_notification_title != None:
-		remove_notification(remove_notification_title)
+	remove_notification(request.GET.get("remove_notification"))
 
 	if project.owner == request.user.username:	is_owner = True
 	else:	is_owner = False
@@ -288,12 +309,14 @@ def project(request, id):
 			solutions.append(sol)
 		
 		if len(solutions) > 0:
+			pages = get_pages(request, len(solutions))
 			return render(request, 'BuildPythonPleaseGUI/project.html', {
 										"project":project,
 										"is_owner":is_owner,
 										"is_closed":is_closed,
 										"solutions":solutions,
 										'notifications':notifications(request),
+										"pages":pages,
 										})
 
 	if request.method == 'POST':
@@ -314,7 +337,6 @@ def project(request, id):
 			create_notification(project.owner, "/project/"+id+"/#"+solution.id, "New Solution - "+solution.id)
 			#for sol in Solution.objects.all():	print sol.solution
 
-
 	return render(request, 'BuildPythonPleaseGUI/project.html', {
 												"project":project,
 												"is_owner":is_owner,
@@ -326,6 +348,7 @@ def project(request, id):
 
 @login_required(login_url="login")
 def all_users(request):
+	remove_notification(request.GET.get("remove_notification"))
 	#warning can change request.user
 	#look how to use session id
 	#same issue in messages, projects, create_project and project, notifications
@@ -343,7 +366,8 @@ def all_users(request):
 													"every_user":every_user,
 													'notifications':notifications(request),
 													})
-	return render(request, "BuildPythonPleaseGUI/all_users.html", { 
+	malicious_activity(request, user.username, "attempted access to /all_users/")
+	return render(request, "BuildPythonPleaseGUI/malicious_activity.html", { 
 													'notifications':notifications(request),
 													})
 
@@ -361,18 +385,7 @@ def messages(request):
 		
 	user_notifications.update(is_new=False)
 
-	pages={}
-	pages["page_limit"] = 5
-	pages["page_links"] = []
-	if request.method == 'POST':
-		pages["form"] = PagesForm(request.POST)
-		pages["page_limit"] = int(request.POST.get("page"))
-	else:
-		pages["form"] = PagesForm()
-	for x in range(len(user_notifications)/pages["page_limit"]):	pages["page_links"].append(str(x))
-	pages["page_links"] = "".join(pages["page_links"])
-	if len(user_notifications)%pages["page_limit"] != 0:
-		pages["page_links"] = pages["page_links"]+str(int(pages["page_links"][-1])+1)
+	pages = get_pages(request, len(user_notifications))
 	return render(request, "BuildPythonPleaseGUI/messages.html", { 
 													'notifications':notifications(request),
 													'user_notifications':user_notifications,

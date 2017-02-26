@@ -93,7 +93,20 @@
 			<br>
 			{% else %}
 
+			<div>
+				<form method='get' action='#'>
+    				<input class="btn btn-primary btn-sm" type="submit" value="Close Project" name="Close"/>
+				</form>
+			</div>
 			{% if solutions %}
+	<form id="pagesform" method="post" action="#">
+		{% csrf_token %}
+		<div class="field_wrapper" style="margin-left:15px;margin-top:10px;">
+   		     {{ pages.form.page }}
+   		 </div>
+		
+	</form>
+			<div id="page0" class="Show" style="display:none">
 			{% for solution in solutions %}
 			<div id="{{ solution.id }}" class="panel-heading panel-heading-custom">{{ solution.id }}</div>
 		    <div class="panel-body">
@@ -152,16 +165,17 @@
 				  
 				  </table>
 			</div>
+		    {% if forloop.counter|divisibleby:pages.page_limit %}
+		    </div>
+		    <div  id="page{% widthratio forloop.counter pages.page_limit 1 %}" style="display:none">
+			{% endif %}
 			{% endfor %}
-
+			</div>
+				     {% for x in pages.page_links %}
+				     <a class="showContent" href="#" data-link="page{{x}}">{{ x }}</a>
+				     {% endfor %}
 			<br>
 			{% endif %}
-
-			<div>
-				<form method='get' action='#'>
-    				<input class="btn btn-primary btn-sm" type="submit" value="Close Project" name="Close"/>
-				</form>
-			</div>
 			{% endif %}
 
 		{% else %}
